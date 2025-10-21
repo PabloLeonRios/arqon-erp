@@ -3,21 +3,19 @@ import { NextResponse } from "next/server";
 import { ProductSchema } from "@/types/product";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
+import { requireOrg } from "@/lib/orgRequest";
 
-export const runtime = "nodejs";           // firebase-admin requiere Node.js
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 /**
- * GET /api/productos
- * - Lista productos, ordenados por createdAt desc.
- * - Opcionales:
- *    ?limit=50
- *    ?categoria=Alimentos
- *    ?q=texto   (busca por 'nombre' o 'sku' con filtro simple en memoria)
+ * GET /api/productos?limit=&categoria=&q=
+ * Filtra SIEMPRE por orgId (multi-tenant seguro).
  */
 export async function GET(req: Request) {
   try {
+    const { orgId } = requireOrg(req);
     const url = new URL(req.url);
     const limitParam = url.searchParams.get("limit");
     const categoria = url.searchParams.get("categoria");
@@ -25,67 +23,52 @@ export async function GET(req: Request) {
 
     const limit = Math.min(Number(limitParam || 25), 100);
 
-    // Empezamos sin orderBy para poder probar fallback si falta índice
-    let queryRef: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> =
-      adminDb.collection("productos");
+    // Colección filtrada por org
+    let ref = adminDb
+      .collection("productos")
+      .where("orgId", "==", orgId)
+      .orderBy("createdAt", "desc");
 
     if (categoria) {
-      queryRef = queryRef.where("categoria", "==", categoria);
+      ref = ref.where("categoria", "==", categoria);
     }
 
-    let snap;
-    try {
-      // Intento rápido con orderBy (puede requerir índice compuesto)
-      snap = await queryRef.orderBy("createdAt", "desc").limit(limit).get();
-    } catch (e: any) {
-      const msg = e?.message || "";
-      const needsIndex = /FAILED_PRECONDITION|requires an index/i.test(msg);
-      if (!needsIndex) throw e;
-
-      // Fallback: sin orderBy; luego ordenamos en memoria
-      snap = await queryRef.limit(limit).get();
-    }
-
+    const snap = await ref.limit(limit).get();
     let data = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     if (q) {
-      // Filtro sencillo en memoria por nombre/sku (para algo más potente -> Algolia/Meilisearch)
       data = data.filter((p: any) =>
         (p.nombre?.toLowerCase() || "").includes(q) ||
         (p.sku?.toLowerCase() || "").includes(q)
       );
     }
 
-    // Si vinimos por fallback, ordenamos en memoria por createdAt desc
-    data.sort((a: any, b: any) => {
-      const aT = a?.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-      const bT = b?.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-      return bT - aT;
-    });
-
     return NextResponse.json({ ok: true, data });
   } catch (err: any) {
     console.error("GET /api/productos error:", err);
-    return NextResponse.json(
-      { ok: false, error: err?.message || "Error interno" },
-      { status: 500 }
-    );
+    const msg =
+      err?.message === "Organización no seleccionada"
+        ? "Seleccioná una organización"
+        : err?.message || "Error interno";
+    const code = msg.includes("organización") ? 400 : 500;
+    return NextResponse.json({ ok: false, error: msg }, { status: code });
   }
 }
 
 /**
  * POST /api/productos
- * - Crea un producto nuevo con validación Zod.
- * - Body JSON: { nombre, sku?, codigoBarras?, precio, iva?, stock?, unidad?, categoria?, activo?, notas? }
+ * Crea con orgId + timestamps.
  */
 export async function POST(req: Request) {
   try {
+    const { orgId } = requireOrg(req);
     const body = await req.json();
     const parsed = ProductSchema.parse(body);
 
     const now = Timestamp.now();
     const docRef = await adminDb.collection("productos").add({
       ...parsed,
+      orgId,
       createdAt: now,
       updatedAt: now,
     });
@@ -94,6 +77,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("POST /api/productos error:", err);
 
+    // Zod
     if (err?.issues) {
       return NextResponse.json(
         { ok: false, error: "Datos inválidos", issues: err.issues },
@@ -101,9 +85,12 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json(
-      { ok: false, error: err?.message || "Error interno" },
-      { status: 500 }
-    );
+    const msg =
+      err?.message === "Organización no seleccionada"
+        ? "Seleccioná una organización"
+        : err?.message || "Error interno";
+
+    const code = msg.includes("organización") ? 400 : 500;
+    return NextResponse.json({ ok: false, error: msg }, { status: code });
   }
 }

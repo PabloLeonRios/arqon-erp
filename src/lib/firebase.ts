@@ -1,2 +1,1 @@
-// src/lib/firebase.ts
-export * from "./firebaseClient";
+﻿export * from "./firebaseClient";
