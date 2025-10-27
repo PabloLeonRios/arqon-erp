@@ -1,4 +1,4 @@
-// src/app/api/debug/tenant/route.ts
+﻿// src/app/api/debug/tenant/route.ts
 import { NextResponse } from "next/server";
 import { readOrgFromCookies, withOrgCookies } from "@/lib/tenancy";
 

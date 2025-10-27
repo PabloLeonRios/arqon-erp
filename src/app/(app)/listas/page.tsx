@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { db } from "@/lib/firebase";
@@ -70,7 +70,7 @@ export default function ListasPage(){
     <main>
       <h1 className="text-xl font-semibold mb-4">Precios (Listas)</h1>
 
-      {/* Crear lista vacía */}
+      {/* Crear lista vacÃ­a */}
       <div className="bg-white rounded-xl shadow p-4 mb-6">
         <div className="grid sm:grid-cols-3 gap-3 items-end">
           <div>
@@ -78,11 +78,11 @@ export default function ListasPage(){
             <input className="border rounded-lg p-2 w-full" value={nombre} onChange={e=>setNombre(e.target.value)} />
           </div>
           <div className="sm:col-span-2">
-            <button onClick={crearLista} className="bg-black text-white rounded-lg px-4 py-2">Crear lista vacía</button>
+            <button onClick={crearLista} className="bg-black text-white rounded-lg px-4 py-2">Crear lista vacÃ­a</button>
             <a href="/importar/precios" className="ml-2 border rounded-lg px-4 py-2 inline-block">+ Importar desde Excel</a>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">Una lista vacía te permite luego asignar productos manualmente (por ahora la edición de precios es en “Productos / Servicios”).</p>
+        <p className="text-xs text-gray-500 mt-2">Una lista vacÃ­a te permite luego asignar productos manualmente (por ahora la ediciÃ³n de precios es en â€œProductos / Serviciosâ€).</p>
       </div>
 
       {/* Listado */}
@@ -93,7 +93,7 @@ export default function ListasPage(){
               <th className="text-left p-2">Nombre</th>
               <th className="text-left p-2">Archivo</th>
               <th className="text-left p-2">Hoja</th>
-              <th className="text-right p-2">Ítems</th>
+              <th className="text-right p-2">Ãtems</th>
               <th className="text-left p-2">Activa</th>
               <th className="p-2"></th>
             </tr>
@@ -115,10 +115,10 @@ export default function ListasPage(){
                     </div>
                   )}
                 </td>
-                <td className="p-2">{l.archivo || "—"}</td>
-                <td className="p-2">{l.sheet || "—"}</td>
+                <td className="p-2">{l.archivo || "â€”"}</td>
+                <td className="p-2">{l.sheet || "â€”"}</td>
                 <td className="p-2 text-right">{l.total_items ?? 0}</td>
-                <td className="p-2">{l.activa ? "Sí" : "No"}</td>
+                <td className="p-2">{l.activa ? "SÃ­" : "No"}</td>
                 <td className="p-2 text-right">
                   {!l.activa && (
                     <button className="border rounded px-2 py-1" onClick={()=>activarLista(l.id)}>Activar</button>

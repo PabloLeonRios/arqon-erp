@@ -1,12 +1,12 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 /**
  * ProductSchema:
  * - nombre: obligatorio
  * - sku / codigoBarras: opcionales
- * - precio: número (se acepta string y se convierte)
+ * - precio: nÃºmero (se acepta string y se convierte)
  * - iva: porcentaje (por defecto 21)
- * - stock: número (por defecto 0)
+ * - stock: nÃºmero (por defecto 0)
  * - unidad: 'unidad', 'kg', 'lt', etc. (opcional)
  * - categoria: opcional (texto)
  * - activo: boolean por defecto true

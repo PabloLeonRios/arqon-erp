@@ -1,4 +1,4 @@
-// src/app/api/import/clientes/route.ts
+﻿// src/app/api/import/clientes/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
@@ -16,7 +16,7 @@ const s = (v: any) => {
 const b = (v: any) => {
   if (typeof v === "boolean") return v;
   const t = (v ?? "").toString().trim().toLowerCase();
-  if (["true", "1", "si", "sí", "yes", "activo", "habilitado"].includes(t)) return true;
+  if (["true", "1", "si", "sÃ­", "yes", "activo", "habilitado"].includes(t)) return true;
   if (["false", "0", "no", "not", "inactivo", "deshabilitado"].includes(t)) return false;
   return undefined;
 };
@@ -76,10 +76,10 @@ async function fetchExistingByIn(
  *   ]
  * }
  *
- * Política:
- * - Si existe doc → update por doc
- * - Si NO existe doc pero existe email → update por email
- * - Si no existe ninguno → create (requiere nombre)
+ * PolÃ­tica:
+ * - Si existe doc â†’ update por doc
+ * - Si NO existe doc pero existe email â†’ update por email
+ * - Si no existe ninguno â†’ create (requiere nombre)
  * - Limpieza de undefined para Firestore
  */
 export async function POST(req: Request) {
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
       for (const raw of pack) {
         const patch = stripUndef(CustomerSchema.partial().parse(raw));
 
-        // ¿Existe?
+        // Â¿Existe?
         let targetId: string | undefined;
         if (patch.doc && existingDoc.has(patch.doc)) targetId = existingDoc.get(patch.doc)!;
         else if (patch.email && existingEmail.has(patch.email)) targetId = existingEmail.get(patch.email)!;
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
           createdAt: now,
           updatedAt: now,
         };
-        // Validación completa para create
+        // ValidaciÃ³n completa para create
         const parsedCreate = CustomerSchema.parse(candidate);
         const cleanCreate = stripUndef(parsedCreate);
 

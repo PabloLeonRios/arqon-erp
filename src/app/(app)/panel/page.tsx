@@ -1,45 +1,48 @@
-"use client";
+﻿'use client';
 
-import { auth } from "@/lib/firebase";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
-import Link from "next/link";
+import Link from 'next/link';
 
-export default function Panel() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
-    return () => unsub();
-  }, []);
-
+export default function PanelPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Panel</h1>
-        <p className="text-neutral-400 mt-1">
-          Usuario: <b className="text-neutral-200">{user?.email}</b>
-        </p>
+      {/* Encabezado */}
+      <div className="flex items-end justify-between">
+        <div>
+          <h1>Panel</h1>
+          <p className="text-[rgb(var(--muted))] mt-1">Arquitectura de tus operaciones</p>
+        </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        <Link href="/clientes" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Clientes
+      {/* Tarjetas */}
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <Link href="/clientes" className="card hover:opacity-90 transition">
+          <div className="card-title">Clientes</div>
+          <p className="text-[rgb(var(--muted))]">Altas, edición y búsqueda</p>
         </Link>
-        <Link href="/productos" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Productos
+
+        <Link href="/productos" className="card hover:opacity-90 transition">
+          <div className="card-title">Productos / Servicios</div>
+          <p className="text-[rgb(var(--muted))]">Catálogo y listas de precios</p>
         </Link>
-        <Link href="/facturas" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Facturas
+
+        <Link href="/facturas" className="card hover:opacity-90 transition">
+          <div className="card-title">Facturas</div>
+          <p className="text-[rgb(var(--muted))]">Emití y consultá</p>
         </Link>
-        <Link href="/tesoreria" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Tesorería
+
+        <Link href="/tesoreria" className="card hover:opacity-90 transition">
+          <div className="card-title">Tesorería</div>
+          <p className="text-[rgb(var(--muted))]">Ingresos/Egresos de caja</p>
         </Link>
-        <Link href="/presupuestos" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Presupuestos
+
+        <Link href="/presupuestos" className="card hover:opacity-90 transition">
+          <div className="card-title">Presupuestos</div>
+          <p className="text-[rgb(var(--muted))]">Generá y convertí a factura</p>
         </Link>
-        <Link href="/ctacte" className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 hover:border-neutral-700">
-          Cuenta Corriente
+
+        <Link href="/ctacte" className="card hover:opacity-90 transition">
+          <div className="card-title">Cuenta Corriente</div>
+          <p className="text-[rgb(var(--muted))]">Movimientos y saldos</p>
         </Link>
       </div>
     </div>

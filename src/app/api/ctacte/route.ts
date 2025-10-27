@@ -1,4 +1,4 @@
-// src/app/api/ctacte/route.ts
+﻿// src/app/api/ctacte/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 

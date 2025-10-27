@@ -1,4 +1,4 @@
-// src/app/api/clientes/route.ts
+﻿// src/app/api/clientes/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
@@ -39,7 +39,7 @@ function allowFields(raw: any) {
     activo: b(raw?.activo),
   };
 }
-// 🔧 clave: limpiar undefined para Firestore
+// ðŸ”§ clave: limpiar undefined para Firestore
 function stripUndefined<T extends Record<string, any>>(obj: T): T {
   const entries = Object.entries(obj).filter(([, v]) => v !== undefined);
   return Object.fromEntries(entries) as T;
@@ -156,10 +156,10 @@ export async function POST(req: Request) {
           { status: 200 }
         );
       }
-      // si no existe, cae a creación
+      // si no existe, cae a creaciÃ³n
     }
 
-    // Creación (validación completa)
+    // CreaciÃ³n (validaciÃ³n completa)
     const candidate = allowFields(raw);
     if (candidate.activo === undefined) candidate.activo = true;
     const parsedCreate = CustomerSchema.parse(candidate);
@@ -172,7 +172,7 @@ export async function POST(req: Request) {
     console.error("POST /api/clientes error:", err);
     if (err?.issues) {
       return NextResponse.json(
-        { ok: false, error: "Datos inválidos", issues: err.issues },
+        { ok: false, error: "Datos invÃ¡lidos", issues: err.issues },
         { status: 400 }
       );
     }

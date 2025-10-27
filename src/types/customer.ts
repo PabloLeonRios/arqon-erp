@@ -1,16 +1,16 @@
-// src/types/customer.ts
+﻿// src/types/customer.ts
 import { z } from "zod";
 
 /**
  * Reglas:
  * - doc = CUIT/CUIL/DNI (string). Si viene, se usa como clave principal de upsert.
  * - Si no hay doc pero hay email, se usa email como clave de upsert.
- * - bonifPct = bonificación libre (0..100). Se aplica en venta, no en importación.
+ * - bonifPct = bonificaciÃ³n libre (0..100). Se aplica en venta, no en importaciÃ³n.
  * - condIva: "RI" | "Monotributo" | "CF" | "Exento" | "No Responsable"
  */
 export const CustomerSchema = z.object({
   doc: z.string().trim().optional(),            // CUIT/CUIL/DNI
-  nombre: z.string().trim().min(1, "Nombre/Razón social requerido"),
+  nombre: z.string().trim().min(1, "Nombre/RazÃ³n social requerido"),
   fantasia: z.string().trim().optional(),
   email: z.string().trim().email().optional(),
   telefono: z.string().trim().optional(),

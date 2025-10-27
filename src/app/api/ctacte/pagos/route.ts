@@ -1,4 +1,4 @@
-// src/app/api/ctacte/pagos/route.ts
+﻿// src/app/api/ctacte/pagos/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const now = Timestamp.now();
 
-    // usaremos una transacción para crear los 3 documentos coherentes
+    // usaremos una transacciÃ³n para crear los 3 documentos coherentes
     const result = await adminDb.runTransaction(async (tx) => {
       const reciboRef = adminDb.collection("recibos").doc();
       const ctacteRef = adminDb.collection("ctacte").doc();
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("POST /api/ctacte/pagos error:", err);
     if (err?.issues) {
-      return NextResponse.json({ ok: false, error: "Datos inválidos", issues: err.issues }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Datos invÃ¡lidos", issues: err.issues }, { status: 400 });
     }
     return NextResponse.json({ ok: false, error: err?.message || "Error" }, { status: 500 });
   }

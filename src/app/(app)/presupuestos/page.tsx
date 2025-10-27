@@ -1,200 +1,115 @@
-"use client";
+﻿'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { db } from "@/lib/firebase";
-import {
-  collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, updateDoc, doc,
-} from "firebase/firestore";
-import PageHeader from "@/components/PageHeader";
-import { Printer } from "lucide-react";
+import { useMemo, useState } from 'react';
 
-type Cliente = { id: string; nombre: string };
-type Item = { desc: string; qty: number; price: number };
+type Linea = { id: string; desc: string; cant: number; precio: number };
+type Presupuesto = {
+  id: string;
+  cliente?: string;
+  estado: 'Borrador' | 'Enviado' | 'Aprobado' | 'Rechazado';
+  lineas: Linea[];
+  total: number;
+};
 
 export default function PresupuestosPage() {
-  const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [clienteId, setClienteId] = useState("");
-  const [items, setItems] = useState<Item[]>([{ desc: "", qty: 1, price: 0 }]);
-  const [estado, setEstado] = useState<"borrador" | "enviado">("borrador");
-  const [msg, setMsg] = useState<string | null>(null);
-  const [rows, setRows] = useState<any[]>([]);
+  const [cliente, setCliente] = useState('');
+  const [estado, setEstado] = useState<Presupuesto['estado']>('Borrador');
+  const [lineas, setLineas] = useState<Linea[]>([{ id: crypto.randomUUID(), desc: '', cant: 1, precio: 0 }]);
+  const [presus, setPresus] = useState<Presupuesto[]>([]);
 
-  useEffect(() => {
-    const qc = query(collection(db, "clientes"), orderBy("nombre", "asc"));
-    const unsubC = onSnapshot(qc, (snap) => setClientes(snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }))));
-    const qp = query(collection(db, "presupuestos"), orderBy("fecha", "desc"));
-    const unsubP = onSnapshot(qp, (snap) => setRows(snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }))));
-    return () => { unsubC(); unsubP(); };
-  }, []);
+  const total = useMemo(() => lineas.reduce((s, l) => s + (l.cant || 0) * (l.precio || 0), 0), [lineas]);
 
-  const total = useMemo(
-    () => items.reduce((a, it) => a + (Number(it.qty) || 0) * (Number(it.price) || 0), 0),
-    [items]
-  );
-
-  function setItem(i: number, key: keyof Item, value: string) {
-    const clone = [...items];
-    if (key === "qty" || key === "price") (clone[i] as any)[key] = Number(value);
-    else (clone[i] as any)[key] = value;
-    setItems(clone);
+  function setLinea(id: string, patch: Partial<Linea>) {
+    setLineas((prev) => prev.map((l) => (l.id === id ? { ...l, ...patch } : l)));
   }
-  function addLinea(){ setItems([...items, { desc: "", qty: 1, price: 0 }]); }
-  function delLinea(i:number){
-    const clone = [...items]; clone.splice(i,1);
-    setItems(clone.length ? clone : [{ desc: "", qty: 1, price: 0 }]);
+  function addLinea() {
+    setLineas((prev) => [...prev, { id: crypto.randomUUID(), desc: '', cant: 1, precio: 0 }]);
+  }
+  function removeLinea(id: string) {
+    setLineas((prev) => prev.filter((l) => l.id !== id));
   }
 
-  async function guardar(e: React.FormEvent) {
-    e.preventDefault(); setMsg(null);
-    if (!clienteId) return setMsg("❌ Elegí un cliente");
-    if (total <= 0) return setMsg("❌ El total debe ser mayor a 0");
-    const cliente = clientes.find((c) => c.id === clienteId);
-    try {
-      await addDoc(collection(db, "presupuestos"), {
-        fecha: serverTimestamp(),
-        clienteId, clienteNombre: cliente?.nombre ?? "",
-        items, total, estado,
-      });
-      setItems([{ desc: "", qty: 1, price: 0 }]); setEstado("borrador");
-      setMsg("✅ Presupuesto guardado");
-    } catch (err: any) { setMsg(`❌ ${err.message}`); }
-  }
-
-  async function convertirAFactura(p:any, forma:"contado"|"cta_cte"){
-    setMsg(null);
-    try {
-      const facturaRef = await addDoc(collection(db, "facturas"), {
-        tipo:"FI", fecha: serverTimestamp(),
-        clienteId: p.clienteId, clienteNombre: p.clienteNombre,
-        items: p.items, total: p.total, formaPago: forma, estado:"cerrada",
-        desdePresupuesto: p.id,
-      });
-      if (forma==="contado"){
-        await addDoc(collection(db,"caja"), {
-          fecha: serverTimestamp(), tipo:"ingreso", origen:"factura",
-          facturaId: facturaRef.id, descripcion:`Cobro FI ${facturaRef.id} - ${p.clienteNombre}`,
-          monto:p.total, medio:"efectivo"
-        });
-      } else {
-        await addDoc(collection(db,"ctacte"), {
-          fecha: serverTimestamp(), clienteId:p.clienteId, clienteNombre:p.clienteNombre,
-          facturaId: facturaRef.id, movimiento:"debe", monto:p.total, saldo:p.total,
-          descripcion:`FI a crédito ${facturaRef.id}`,
-        });
-      }
-      await updateDoc(doc(db,"presupuestos", p.id), { estado:"aprobado", facturaId: facturaRef.id });
-      setMsg("✅ Convertido a factura correctamente");
-    } catch (err:any){ setMsg(`❌ ${err.message}`); }
+  function guardar() {
+    const p: Presupuesto = {
+      id: crypto.randomUUID(),
+      cliente: cliente.trim() || undefined,
+      estado,
+      lineas: lineas.filter((l) => l.desc.trim()),
+      total,
+    };
+    setPresus((prev) => [p, ...prev]);
+    setCliente(''); setEstado('Borrador');
+    setLineas([{ id: crypto.randomUUID(), desc: '', cant: 1, precio: 0 }]);
   }
 
   return (
-    <main className="min-h-screen">
-      <PageHeader
-        title="Presupuestos"
-        subtitle="Creá, lista y convertí a factura"
-        actions={<a className="btn-outline" href="/panel">← Volver</a>}
-      />
+    <div className="space-y-6">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1>Presupuestos</h1>
+          <p className="text-[rgb(var(--muted))] mt-1">Creá, lista y convertí a factura</p>
+        </div>
+      </div>
 
-      {/* Alta */}
-      <form onSubmit={guardar} className="card p-4 mb-6 space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <select className="border rounded-lg p-3" value={clienteId} onChange={(e)=>setClienteId(e.target.value)} required>
-            <option value="">— Seleccionar cliente —</option>
-            {clientes.map((c)=> <option key={c.id} value={c.id}>{c.nombre}</option>)}
+      <div className="card">
+        <div className="card-title">Nuevo presupuesto</div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <input className="input" placeholder="Cliente" value={cliente} onChange={(e) => setCliente(e.target.value)} />
+          <select className="input" value={estado} onChange={(e) => setEstado(e.target.value as any)}>
+            <option>Borrador</option><option>Enviado</option><option>Aprobado</option><option>Rechazado</option>
           </select>
-
-          <select className="border rounded-lg p-3" value={estado} onChange={(e)=>setEstado(e.target.value as any)}>
-            <option value="borrador">Borrador</option>
-            <option value="enviado">Enviado</option>
-          </select>
-
-          <div className="flex items-center justify-end">
-            <div className="text-lg"><b>Total:</b> ${total.toFixed(2)}</div>
-          </div>
         </div>
 
-        <div className="border rounded-xl overflow-hidden">
-          <table className="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Descripción</th>
-                <th className="text-right w-24">Cant.</th>
-                <th className="text-right w-32">Precio</th>
-                <th className="text-right w-32">Importe</th>
-                <th className="w-12"></th>
-              </tr>
-            </thead>
+        <div className="mt-4 overflow-x-auto">
+          <table className="table">
+            <thead><tr><th>Descripción</th><th style={{width:100}}>Cant.</th><th style={{width:160}}>Precio</th><th style={{width:60}}></th></tr></thead>
             <tbody>
-              {items.map((it, i)=>(
-                <tr key={i}>
-                  <td>
-                    <input className="w-full border rounded-lg p-2"
-                      placeholder="Servicio o producto"
-                      value={it.desc} onChange={(e)=>setItem(i,"desc", e.target.value)} required />
-                  </td>
-                  <td className="text-right">
-                    <input type="number" min={0} className="w-full border rounded-lg p-2 text-right"
-                      value={it.qty} onChange={(e)=>setItem(i,"qty", e.target.value)} required />
-                  </td>
-                    <td className="text-right">
-                      <input type="number" step="0.01" min={0} className="w-full border rounded-lg p-2 text-right"
-                        value={it.price} onChange={(e)=>setItem(i,"price", e.target.value)} required />
-                    </td>
-                    <td className="text-right">{(Number(it.qty)*Number(it.price)).toFixed(2)}</td>
-                    <td className="text-center">
-                      <button type="button" className="btn-danger" onClick={()=>delLinea(i)}>✕</button>
-                    </td>
+              {lineas.map((l) => (
+                <tr key={l.id}>
+                  <td><input className="input" placeholder="Servicio o producto" value={l.desc} onChange={(e) => setLinea(l.id, { desc: e.target.value })} /></td>
+                  <td><input className="input" value={l.cant} onChange={(e) => setLinea(l.id, { cant: parseFloat(e.target.value) || 0 })} /></td>
+                  <td><input className="input" value={l.precio} onChange={(e) => setLinea(l.id, { precio: parseFloat(e.target.value) || 0 })} /></td>
+                  <td className="text-right"><button className="btn btn-danger" onClick={() => removeLinea(l.id)}>×</button></td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan={4}><button className="btn btn-ghost" onClick={addLinea}>+ Agregar línea</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex items-center justify-between pt-3">
+          <div className="text-[rgb(var(--muted))]">Total:</div>
+          <div className="text-2xl font-semibold">${total.toFixed(2)}</div>
+        </div>
+
+        <div className="flex justify-end pt-3">
+          <button className="btn btn-primary" onClick={guardar}>Guardar presupuesto</button>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-title">Últimos presupuestos</div>
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Estado</th><th>Total</th></tr></thead>
+            <tbody>
+              {presus.length === 0 ? (
+                <tr><td colSpan={4} className="text-center py-8 text-[rgb(var(--muted))]">Sin presupuestos aún.</td></tr>
+              ) : presus.map(p => (
+                <tr key={p.id}>
+                  <td>{new Date().toLocaleString()}</td>
+                  <td>{p.cliente || '-'}</td>
+                  <td>{p.estado}</td>
+                  <td>${p.total.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="p-2">
-            <button type="button" className="btn-outline" onClick={addLinea}>+ Agregar línea</button>
-          </div>
         </div>
-
-        <div className="flex items-center justify-end gap-2">
-          <button type="submit" className="btn-primary">Guardar presupuesto</button>
-        </div>
-
-        {msg && <p className="text-sm text-muted">{msg}</p>}
-      </form>
-
-      {/* Listado */}
-      <div className="card p-4">
-        <h2 className="text-lg font-medium mb-3">Últimos presupuestos</h2>
-        <ul className="divide-y">
-          {rows.map((p)=>(
-            <li key={p.id} className="py-3 flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="font-medium truncate">{p.clienteNombre}</p>
-                <p className="text-sm text-muted">
-                  Estado:{" "}
-                  <span className={
-                    p.estado==="aprobado" ? "badge-success" :
-                    p.estado==="enviado"  ? "badge-info"    :
-                    "badge-muted"
-                  }>{p.estado}</span>
-                  {" · "}Total ${Number(p.total).toFixed(2)}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2 shrink-0">
-                <a className="btn-outline" href={`/presupuestos/${p.id}`} target="_blank">
-                  <Printer size={16}/> Imprimir
-                </a>
-                <button className="btn-outline" onClick={()=>convertirAFactura(p,"contado")}>Facturar contado</button>
-                <button className="btn-outline" onClick={()=>convertirAFactura(p,"cta_cte")}>Facturar cta cte</button>
-              </div>
-            </li>
-          ))}
-          {rows.length===0 && (
-            <div className="empty">
-              <h3>Sin presupuestos aún</h3>
-              <p>Creá el primero arriba y empezá a vender ✨</p>
-            </div>
-          )}
-        </ul>
       </div>
-    </main>
+    </div>
   );
 }

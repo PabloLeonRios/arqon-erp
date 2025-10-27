@@ -1,4 +1,4 @@
-// src/lib/tenancy.ts
+﻿// src/lib/tenancy.ts
 import { cookies, type RequestCookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -18,7 +18,7 @@ export function withOrgCookies(
   res: NextResponse,
   org: { orgId: string; orgName: string }
 ) {
-  // 30 días
+  // 30 dÃ­as
   const maxAge = 60 * 60 * 24 * 30;
   res.cookies.set(ORG_COOKIE_ID, org.orgId, {
     httpOnly: false,

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
@@ -45,7 +45,7 @@ export default function ImportarListasPage() {
       const cols = Object.keys(json[0] || {});
       const find = (cands: string[]) => cols.find((c) => cands.includes(norm(c)));
 
-      const cSku    = find(["sku","codigo","código","code","articulo","artículo"]);
+      const cSku    = find(["sku","codigo","cÃ³digo","code","articulo","artÃ­culo"]);
       const cCosto  = find(["costo","cost","costo unit","costo_unit","costounit"]);
       const cPrecio = find(["precio","price","pvp","venta"]);
 
@@ -112,10 +112,10 @@ export default function ImportarListasPage() {
       if (!j.ok) throw new Error(j.error || "Error importando");
 
       setMsg(
-        `✅ Importación OK · Lista ${j.codigo} · Total: ${j.total} · (Productos actualizados: ${j.prodUpdated ?? 0})`
+        `âœ… ImportaciÃ³n OK Â· Lista ${j.codigo} Â· Total: ${j.total} Â· (Productos actualizados: ${j.prodUpdated ?? 0})`
       );
     } catch (e: any) {
-      setMsg(`❌ ${e.message || "Error importando"}`);
+      setMsg(`âŒ ${e.message || "Error importando"}`);
     } finally {
       setBusy(false);
     }
@@ -125,16 +125,16 @@ export default function ImportarListasPage() {
     <main className="space-y-6">
       <h1 className="text-2xl font-semibold">Importar listas de precios</h1>
       <p className="text-sm text-neutral-300">
-        Subí un XLSX/CSV con columnas <b>sku</b>, <b>costo</b> y/o <b>precio</b>. Si elegís “Usar precio del archivo”,
-        se tomarán los valores de la columna <b>precio</b>. Si no, se calculará desde <b>costo</b> con <b>markup</b> y
-        <b> redondeo</b> al múltiplo superior.
+        SubÃ­ un XLSX/CSV con columnas <b>sku</b>, <b>costo</b> y/o <b>precio</b>. Si elegÃ­s â€œUsar precio del archivoâ€,
+        se tomarÃ¡n los valores de la columna <b>precio</b>. Si no, se calcularÃ¡ desde <b>costo</b> con <b>markup</b> y
+        <b> redondeo</b> al mÃºltiplo superior.
       </p>
 
       {/* Opciones */}
       <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           <div>
-            <label className="block text-xs text-neutral-400 mb-1">Código de lista</label>
+            <label className="block text-xs text-neutral-400 mb-1">CÃ³digo de lista</label>
             <input
               className="w-full rounded-md bg-neutral-950 px-3 py-2 ring-1 ring-neutral-800"
               value={codigo}
@@ -170,7 +170,7 @@ export default function ImportarListasPage() {
               disabled={codigo.toUpperCase() !== "BASE"}
             />
             <label htmlFor="actualizarBase" className="text-sm">
-              Actualizar <b>productos.precio</b> (sólo BASE)
+              Actualizar <b>productos.precio</b> (sÃ³lo BASE)
             </label>
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function ImportarListasPage() {
             />
           </div>
           <div>
-            <label className="block text-xs text-neutral-400 mb-1">Redondeo (múltiplo superior)</label>
+            <label className="block text-xs text-neutral-400 mb-1">Redondeo (mÃºltiplo superior)</label>
             <input
               type="number"
               className="w-full rounded-md bg-neutral-950 px-3 py-2 ring-1 ring-neutral-800"
@@ -210,7 +210,7 @@ export default function ImportarListasPage() {
             disabled={!items.length || busy}
             className="rounded-md bg-emerald-600 px-4 py-2 font-medium disabled:opacity-50"
           >
-            {busy ? "Importando..." : `Importar (${total} ítems)`}
+            {busy ? "Importando..." : `Importar (${total} Ã­tems)`}
           </button>
           <button
             onClick={addRow}
@@ -275,7 +275,7 @@ export default function ImportarListasPage() {
                       className="text-red-400 hover:text-red-300"
                       onClick={() => delRow(i)}
                     >
-                      ✕
+                      âœ•
                     </button>
                   </td>
                 </tr>

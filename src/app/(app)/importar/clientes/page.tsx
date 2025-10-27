@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
@@ -23,7 +23,7 @@ function norm(s: any) {
 }
 function toBool(v: any) {
   const t = (v ?? "").toString().trim().toLowerCase();
-  if (["true","1","si","sí","activo","activa"].includes(t)) return true;
+  if (["true","1","si","sÃ­","activo","activa"].includes(t)) return true;
   if (["false","0","no","inactivo","inactiva"].includes(t)) return false;
   return undefined;
 }
@@ -62,15 +62,15 @@ export default function ImportarClientesPage() {
       const find = (cands: string[]) => cols.find((c) => cands.includes(norm(c)));
 
       const cDoc       = find(["doc","documento","dni","cuit","cuil"]);
-      const cNombre    = find(["nombre","razon social","razón social","razon","razón","cliente"]);
-      const cFantasia  = find(["fantasia","fantasía","comercial","nombre fantasia","nombre de fantasia"]);
-      const cEmail     = find(["email","mail","correo","correo electronico","correo electrónico"]);
-      const cTel       = find(["telefono","teléfono","cel","celular","movil","móvil"]);
-      const cDir       = find(["direccion","dirección","domicilio","calle"]);
-      const cLoc       = find(["localidad","ciudad","poblacion","población"]);
-      const cProv      = find(["provincia","estado","region","región"]);
-      const cCondIva   = find(["condiva","iva","condicion iva","condición iva","condición de iva","cond. iva"]);
-      const cBonif     = find(["bonif","bonificacion","bonificación","bonif%","bonif_pct","descuento"]);
+      const cNombre    = find(["nombre","razon social","razÃ³n social","razon","razÃ³n","cliente"]);
+      const cFantasia  = find(["fantasia","fantasÃ­a","comercial","nombre fantasia","nombre de fantasia"]);
+      const cEmail     = find(["email","mail","correo","correo electronico","correo electrÃ³nico"]);
+      const cTel       = find(["telefono","telÃ©fono","cel","celular","movil","mÃ³vil"]);
+      const cDir       = find(["direccion","direcciÃ³n","domicilio","calle"]);
+      const cLoc       = find(["localidad","ciudad","poblacion","poblaciÃ³n"]);
+      const cProv      = find(["provincia","estado","region","regiÃ³n"]);
+      const cCondIva   = find(["condiva","iva","condicion iva","condiciÃ³n iva","condiciÃ³n de iva","cond. iva"]);
+      const cBonif     = find(["bonif","bonificacion","bonificaciÃ³n","bonif%","bonif_pct","descuento"]);
       const cNotas     = find(["notas","observaciones","obs"]);
       const cActivo    = find(["activo","estado","habilitado"]);
 
@@ -125,9 +125,9 @@ export default function ImportarClientesPage() {
         updated  += j.updated  || 0;
         total    += j.total    || pack.length;
       }
-      setMsg(`✅ Importación OK · Insertados: ${inserted} · Actualizados: ${updated} · Total: ${total}`);
+      setMsg(`âœ… ImportaciÃ³n OK Â· Insertados: ${inserted} Â· Actualizados: ${updated} Â· Total: ${total}`);
     } catch (e: any) {
-      setMsg(`❌ ${e.message || "Error importando"}`);
+      setMsg(`âŒ ${e.message || "Error importando"}`);
     } finally {
       setBusy(false);
     }
@@ -137,7 +137,7 @@ export default function ImportarClientesPage() {
     <main className="space-y-6">
       <h1 className="text-2xl font-semibold">Importar clientes</h1>
       <p className="text-sm text-neutral-300">
-        Upsert por <b>Doc</b> (CUIT/CUIL/DNI) o <b>Email</b>. La bonificación se aplica en la venta (no aquí).
+        Upsert por <b>Doc</b> (CUIT/CUIL/DNI) o <b>Email</b>. La bonificaciÃ³n se aplica en la venta (no aquÃ­).
       </p>
 
       <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-4 space-y-3">
@@ -167,10 +167,10 @@ export default function ImportarClientesPage() {
               <tr>
                 <th className="p-2 text-left">Doc</th>
                 <th className="p-2 text-left">Nombre</th>
-                <th className="p-2 text-left">Fantasía</th>
+                <th className="p-2 text-left">FantasÃ­a</th>
                 <th className="p-2 text-left">Email</th>
-                <th className="p-2 text-left">Teléfono</th>
-                <th className="p-2 text-left">Dirección</th>
+                <th className="p-2 text-left">TelÃ©fono</th>
+                <th className="p-2 text-left">DirecciÃ³n</th>
                 <th className="p-2 text-left">Localidad</th>
                 <th className="p-2 text-left">Provincia</th>
                 <th className="p-2 text-left">Cond. IVA</th>
@@ -217,7 +217,7 @@ export default function ImportarClientesPage() {
                   <td className="p-2">
                     <select className="w-40 rounded-md bg-neutral-950 px-2 py-1 ring-1 ring-neutral-800"
                       value={c.condIva || ""} onChange={(e)=>setCell(i,"condIva",e.target.value)}>
-                      <option value="">—</option>
+                      <option value="">â€”</option>
                       <option value="RI">RI</option>
                       <option value="Monotributo">Monotributo</option>
                       <option value="CF">CF</option>

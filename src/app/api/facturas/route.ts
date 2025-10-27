@@ -1,4 +1,4 @@
-// src/app/api/facturas/route.ts
+﻿// src/app/api/facturas/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
@@ -29,7 +29,7 @@ export async function GET(req: Request) {
 
     let snap;
     try {
-      // Intento rápido con orderBy (puede requerir índice compuesto)
+      // Intento rÃ¡pido con orderBy (puede requerir Ã­ndice compuesto)
       snap = await q.orderBy("fecha", "desc").limit(limit).get();
     } catch (e: any) {
       const msg = e?.message || "";
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     });
     const total = Number(subtotal.toFixed(2));
 
-    // Iniciamos batch para escribir todo atómico
+    // Iniciamos batch para escribir todo atÃ³mico
     const batch = adminDb.batch();
 
     // 1) Factura
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
         movimiento: "debe",
         monto: total,
         saldo: total,
-        descripcion: `FI a crédito ${facturaRef.id}`,
+        descripcion: `FI a crÃ©dito ${facturaRef.id}`,
         createdAt: now,
       });
     }
@@ -164,7 +164,7 @@ export async function POST(req: Request) {
 
     if (err?.issues) {
       return NextResponse.json(
-        { ok: false, error: "Datos inválidos", issues: err.issues },
+        { ok: false, error: "Datos invÃ¡lidos", issues: err.issues },
         { status: 400 }
       );
     }

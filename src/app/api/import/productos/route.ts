@@ -1,4 +1,4 @@
-// src/app/api/import/productos/route.ts
+﻿// src/app/api/import/productos/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     const upsert = !!body?.upsert;
     let items: any[] = Array.isArray(body?.items) ? body.items : [];
 
-    // Saneamos + normalizamos mínimos
+    // Saneamos + normalizamos mÃ­nimos
     items = items.map((r) => ({
       sku: (r?.sku ?? "").toString().trim(),
       nombre: (r?.nombre ?? "").toString().trim(),
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     })).filter((r) => r.nombre && (r.precio >= 0));
 
     if (!items.length) {
-      return NextResponse.json({ ok: false, error: "Sin items válidos para importar" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Sin items vÃ¡lidos para importar" }, { status: 400 });
     }
 
     // 1) Si upsert: traemos existentes por sku con 'in' (de a 30)
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2) Batches (máx 500 writes por batch)
+    // 2) Batches (mÃ¡x 500 writes por batch)
     const now = new Date();
     let inserted = 0, updated = 0;
 

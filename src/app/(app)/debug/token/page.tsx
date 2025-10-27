@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
@@ -20,7 +20,7 @@ export default function DebugTokenPage() {
   }
 
   async function probarEndpoint() {
-    setResult("Llamando…");
+    setResult("Llamandoâ€¦");
     try {
       const res = await fetch(`/api/_debug/tenant?orgId=${encodeURIComponent(orgId || "")}`, {
         headers: {
@@ -41,10 +41,10 @@ export default function DebugTokenPage() {
 
   return (
     <main className="max-w-3xl mx-auto space-y-4">
-      <h1 className="text-2xl font-semibold">Debug · Token & Tenancy</h1>
+      <h1 className="text-2xl font-semibold">Debug Â· Token & Tenancy</h1>
 
       <div className="text-sm text-neutral-300">
-        <div>Org actual: <b>{orgName || "(sin org)"}</b> · <code>{orgId || "—"}</code></div>
+        <div>Org actual: <b>{orgName || "(sin org)"}</b> Â· <code>{orgId || "â€”"}</code></div>
       </div>
 
       <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function DebugTokenPage() {
           Probar /api/_debug/tenant
         </button>
         <pre className="w-full rounded-md bg-neutral-950 p-3 text-xs overflow-auto">
-{result || "Sin resultados…"}
+{result || "Sin resultadosâ€¦"}
         </pre>
       </div>
     </main>

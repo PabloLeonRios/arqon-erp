@@ -1,4 +1,4 @@
-// src/lib/tenant.ts
+﻿// src/lib/tenant.ts
 import { adminAuth, adminDb } from "@/lib/firebaseAdmin";
 
 export class HttpError extends Error {
@@ -32,7 +32,7 @@ function getBearerFrom(req: Request): string | null {
  * Verifica:
  * - Authorization: Bearer <idToken>
  * - x-org-id: <orgId>  (o ?orgId=)
- * - Membresía en orgs/{orgId}/users/{uid} y org activa
+ * - MembresÃ­a en orgs/{orgId}/users/{uid} y org activa
  */
 export async function getAuthedContext(req: Request) {
   const orgId = getOrgIdFrom(req);
@@ -50,26 +50,26 @@ export async function getAuthedContext(req: Request) {
   try {
     decoded = await adminAuth.verifyIdToken(tokenStr);
   } catch (e) {
-    throw new HttpError(401, "Token inválido o vencido");
+    throw new HttpError(401, "Token invÃ¡lido o vencido");
   }
 
   const uid = decoded.uid;
 
-  // Verificar organización existe
+  // Verificar organizaciÃ³n existe
   const orgRef = adminDb.collection("orgs").doc(orgId);
   const orgSnap = await orgRef.get();
   if (!orgSnap.exists) {
-    throw new HttpError(404, "Organización no encontrada");
+    throw new HttpError(404, "OrganizaciÃ³n no encontrada");
   }
   if (orgSnap.data()?.active === false) {
-    throw new HttpError(403, "Organización desactivada");
+    throw new HttpError(403, "OrganizaciÃ³n desactivada");
   }
 
-  // Verificar membresía activa
+  // Verificar membresÃ­a activa
   const membRef = orgRef.collection("users").doc(uid);
   const memb = await membRef.get();
   if (!memb.exists || memb.data()?.active === false) {
-    throw new HttpError(403, "No sos miembro activo de esta organización");
+    throw new HttpError(403, "No sos miembro activo de esta organizaciÃ³n");
   }
 
   const role = (memb.data()?.role as string) || "user";

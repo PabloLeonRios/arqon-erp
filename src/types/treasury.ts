@@ -1,11 +1,11 @@
-// src/types/treasury.ts
+﻿// src/types/treasury.ts
 import { z } from "zod";
 
 export const CajaMovimientoSchema = z.object({
   tipo: z.enum(["ingreso", "egreso"]),
-  monto: z.coerce.number().min(0.01, "Monto inválido"),
+  monto: z.coerce.number().min(0.01, "Monto invÃ¡lido"),
   medio: z.string().min(1, "Medio requerido"), // efectivo, transferencia, etc.
-  descripcion: z.string().min(1, "Descripción requerida"),
+  descripcion: z.string().min(1, "DescripciÃ³n requerida"),
   ref: z.object({
     facturaId: z.string().optional(),
     reciboId: z.string().optional(),

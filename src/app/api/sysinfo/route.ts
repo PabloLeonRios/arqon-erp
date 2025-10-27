@@ -1,4 +1,4 @@
-// src/app/api/sysinfo/route.ts
+﻿// src/app/api/sysinfo/route.ts
 import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";

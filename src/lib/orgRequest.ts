@@ -1,9 +1,9 @@
-// src/lib/orgRequest.ts
+﻿// src/lib/orgRequest.ts
 import { cookies } from "next/headers";
 
 export function getOrgFromRequest(req: Request) {
   // 1) Primero headers (los setea el middleware)
-  // 2) Fallback a cookies (por si llamás desde server-side sin pasar por middleware)
+  // 2) Fallback a cookies (por si llamÃ¡s desde server-side sin pasar por middleware)
   const h = new Headers(req.headers);
   const orgId = h.get("x-org-id") || cookies().get("arqon_org_id")?.value || "";
   const orgName =
@@ -13,6 +13,6 @@ export function getOrgFromRequest(req: Request) {
 
 export function requireOrg(req: Request) {
   const { orgId, orgName } = getOrgFromRequest(req);
-  if (!orgId) throw new Error("Organización no seleccionada");
+  if (!orgId) throw new Error("OrganizaciÃ³n no seleccionada");
   return { orgId, orgName };
 }

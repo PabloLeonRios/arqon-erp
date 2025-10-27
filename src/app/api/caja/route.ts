@@ -1,4 +1,4 @@
-// src/app/api/caja/route.ts
+﻿// src/app/api/caja/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
       q = q.where("fecha", "<=", toTs);
     }
 
-    // Si fallara por índice (por where + orderBy), quitamos orderBy y ordenamos en memoria
+    // Si fallara por Ã­ndice (por where + orderBy), quitamos orderBy y ordenamos en memoria
     let snap;
     try {
       snap = await q.orderBy("fecha", "desc").limit(limit).get();
@@ -47,7 +47,7 @@ export async function GET(req: Request) {
         return bt - at;
       });
 
-    // Totales rápidos en la respuesta
+    // Totales rÃ¡pidos en la respuesta
     const tot = data.reduce(
       (acc: any, m: any) => {
         if (m.tipo === "ingreso") acc.ingresos += Number(m.monto || 0);
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("POST /api/caja error:", err);
     if (err?.issues) {
-      return NextResponse.json({ ok: false, error: "Datos inválidos", issues: err.issues }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Datos invÃ¡lidos", issues: err.issues }, { status: 400 });
     }
     return NextResponse.json({ ok: false, error: err?.message || "Error" }, { status: 500 });
   }

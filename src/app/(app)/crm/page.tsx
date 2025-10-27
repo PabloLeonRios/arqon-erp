@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
@@ -55,7 +55,7 @@ export default function CRMPage() {
   return (
     <main className="min-h-screen p-6 bg-gray-50">
       <header className="mb-4 flex flex-wrap items-center gap-2">
-        <a href="/panel" className="rounded-lg border px-3 py-1">← Panel</a>
+        <a href="/panel" className="rounded-lg border px-3 py-1">â† Panel</a>
       </header>
 
       <div className="max-w-6xl mx-auto grid gap-6">
@@ -67,7 +67,7 @@ export default function CRMPage() {
             <input className="border rounded-lg p-2 lg:col-span-2" placeholder="Nombre *" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} required />
             <input className="border rounded-lg p-2" placeholder="Empresa" value={form.empresa} onChange={(e) => setForm({ ...form, empresa: e.target.value })} />
             <input className="border rounded-lg p-2" type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className="border rounded-lg p-2" placeholder="Teléfono" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
+            <input className="border rounded-lg p-2" placeholder="TelÃ©fono" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
             <input className="border rounded-lg p-2 lg:col-span-2" placeholder="Nota" value={form.nota} onChange={(e) => setForm({ ...form, nota: e.target.value })} />
             <button className="rounded-lg bg-black text-white px-4">Guardar</button>
           </form>
@@ -81,12 +81,12 @@ export default function CRMPage() {
                 {leads.filter((l) => l.etapa === etapa).map((l) => (
                   <li key={l.id} className="border rounded-lg p-2">
                     <p className="font-medium">{l.nombre}</p>
-                    <p className="text-xs text-gray-600">{[l.empresa, l.email, l.telefono].filter(Boolean).join(" · ")}</p>
+                    <p className="text-xs text-gray-600">{[l.empresa, l.email, l.telefono].filter(Boolean).join(" Â· ")}</p>
                     <p className="text-xs text-gray-600">{l.nota}</p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {ETAPAS.filter((e) => e !== etapa).map((e) => (
                         <button key={e} className="rounded border px-2 text-xs capitalize" onClick={() => setEtapa(l.id, e)}>
-                          → {e}
+                          â†’ {e}
                         </button>
                       ))}
                     </div>

@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 // next.config.js
 var nextConfig = {
@@ -10,7 +10,7 @@ var nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  // (Opcional) si usás imágenes externas, podés configurar domains acá
+  // (Opcional) si usÃ¡s imÃ¡genes externas, podÃ©s configurar domains acÃ¡
   images: {
     remotePatterns: []
   }

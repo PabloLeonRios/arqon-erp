@@ -1,26 +1,92 @@
-/* Carga Tailwind (v4) */
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* --- Altura completa y scroll estable (anti “temblequeo”) --- */
-html, body { height: 100%; }
-html { scrollbar-gutter: stable both-edges; }
+/* ======= BASE: tipografía, colores de fondo ======= */
+@layer base {
+  :root {
+    --bg: 14 14 14;         /* neutral-950 */
+    --panel: 23 23 23;      /* neutral-900 */
+    --panel-2: 38 38 38;    /* neutral-800 */
+    --text: 229 229 229;    /* neutral-200 */
+    --muted: 163 163 163;   /* neutral-400 */
+    --stroke: 64 64 64;     /* neutral-700 */
+    --brand: 16 185 129;    /* emerald-500/600 */
+  }
 
-/* --- Fondo y tipografía base (sin @apply) --- */
-body {
-  background: #fafafa;           /* equivalente a bg-neutral-50 */
-  color: #111827;                /* equivalente a text-neutral-900 */
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  html, body {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-[rgb(var(--bg))] text-[rgb(var(--text))];
+  }
+
+  h1 { @apply text-3xl md:text-4xl font-semibold tracking-tight; }
+  h2 { @apply text-2xl md:text-3xl font-semibold tracking-tight; }
+  h3 { @apply text-xl md:text-2xl font-semibold; }
+
+  a { @apply text-emerald-400 hover:text-emerald-300 transition-colors; }
 }
 
-/* --- Botones simples (por si los usás fuera de Tailwind) --- */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid #e5e7eb;border-radius:12px;
-  padding:.5rem 1rem;font-size:.875rem;background:#fff;color:#111827
-}
-.btn:hover{background:#f3f4f6}
-.btn-primary{background:#111827;color:#fff;border-color:#111827}
-.btn-primary:hover{filter:brightness(.95)}
+/* ======= COMPONENTS: estilos reutilizables ======= */
+@layer components {
+  /* Contenedor general de página */
+  .page {
+    @apply max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-10;
+  }
 
-/* contenedor utilitario */
-.container-max{max-width:72rem;margin-inline:auto;padding-inline:1rem}
+  /* Tarjetas */
+  .card {
+    @apply rounded-2xl bg-[rgb(var(--panel))] border border-[rgb(var(--panel-2))] shadow-xl p-5 md:p-6;
+  }
+  .card-title {
+    @apply text-xl font-semibold mb-4;
+  }
+
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition-colors;
+  }
+  .btn-primary {
+    @apply bg-emerald-600 hover:bg-emerald-500 text-black;
+  }
+  .btn-ghost {
+    @apply bg-[rgb(var(--panel))] hover:bg-[rgb(var(--panel-2))] border border-[rgb(var(--panel-2))];
+  }
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white;
+  }
+
+  /* Inputs */
+  .input, .select, .textarea {
+    @apply w-full rounded-xl bg-[rgb(var(--panel-2))] border border-[rgb(var(--stroke))] px-4 py-3 outline-none
+           focus:border-emerald-500 placeholder:text-[rgb(var(--muted))];
+  }
+  .select { @apply pr-10; }
+  .textarea { @apply min-h-[120px] resize-y; }
+
+  /* Tablas */
+  .table {
+    @apply w-full text-sm overflow-hidden rounded-2xl border border-[rgb(var(--panel-2))];
+  }
+  .table thead th {
+    @apply bg-[rgb(var(--panel-2))] text-[rgb(var(--muted))] font-medium text-left px-4 py-3;
+  }
+  .table tbody td {
+    @apply border-t border-[rgb(var(--panel-2))] px-4 py-3;
+  }
+  .table tr:hover td {
+    @apply bg-[rgb(var(--panel))];
+  }
+
+  /* Secciones */
+  .section-title {
+    @apply text-lg font-semibold text-[rgb(var(--muted))] uppercase tracking-wider;
+  }
+}
+
+/* ======= UTILIDADES FINAS ======= */
+.shadow-hero {
+  box-shadow: 0 40px 120px rgba(0,0,0,0.45);
+}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { db } from "@/lib/firebase";
@@ -48,7 +48,7 @@ function round10(x: number, mode: RoundMode) {
   if (mode==="floor10")   return Math.floor(x/10)*10;
   return x;
 }
-function fmt(n?: number|null){ if (n===null || n===undefined || !isFinite(Number(n))) return "—"; return `$${Number(n).toFixed(2)}`; }
+function fmt(n?: number|null){ if (n===null || n===undefined || !isFinite(Number(n))) return "â€”"; return `$${Number(n).toFixed(2)}`; }
 
 export default function PreciosPage(){
   const [qtext, setQtext] = useState("");
@@ -119,22 +119,22 @@ export default function PreciosPage(){
     <main>
       <PageHeader
         title="Precios"
-        subtitle="Editar manualmente precio, bonificación, markup y redondeo"
-        actions={<a href="/importar/precios" className="btn-outline">↗ Importar precios</a>}
+        subtitle="Editar manualmente precio, bonificaciÃ³n, markup y redondeo"
+        actions={<a href="/importar/precios" className="btn-outline">â†— Importar precios</a>}
       />
 
       <div className="container mt-6">
         <div className="card p-4 mb-4">
-          <input className="border rounded-lg p-2 w-full" placeholder="Buscar por descripción, código o categoría…" value={qtext} onChange={(e)=>setQtext(e.target.value)} />
+          <input className="border rounded-lg p-2 w-full" placeholder="Buscar por descripciÃ³n, cÃ³digo o categorÃ­aâ€¦" value={qtext} onChange={(e)=>setQtext(e.target.value)} />
         </div>
 
         <div className="card p-4 overflow-x-auto">
           <table className="table table-striped table-hover">
             <thead>
               <tr>
-                <th>Descripción</th>
-                <th>Código</th>
-                <th>Categoría</th>
+                <th>DescripciÃ³n</th>
+                <th>CÃ³digo</th>
+                <th>CategorÃ­a</th>
                 <th className="text-right">Precio fuente</th>
                 <th className="text-right">Bonif</th>
                 <th className="text-right">Costo neto</th>
@@ -151,14 +151,14 @@ export default function PreciosPage(){
                   return (
                     <tr key={r.id}>
                       <td>{r.descripcion}</td>
-                      <td>{r.codigo || "—"}</td>
-                      <td>{r.categoria || "—"}</td>
+                      <td>{r.codigo || "â€”"}</td>
+                      <td>{r.categoria || "â€”"}</td>
                       <td className="text-right">{fmt(r.precio_base)}</td>
-                      <td className="text-right">{r.bonifChain ? `${r.bonifChain}%` : (r.bonifs && r.bonifs.length ? r.bonifs.join("+")+"%" : "—")}</td>
+                      <td className="text-right">{r.bonifChain ? `${r.bonifChain}%` : (r.bonifs && r.bonifs.length ? r.bonifs.join("+")+"%" : "â€”")}</td>
                       <td className="text-right">{fmt(r.costo_neto)}</td>
-                      <td className="text-right">{typeof r.markup === "number" ? `${r.markup.toFixed(2)}%` : "—"}</td>
+                      <td className="text-right">{typeof r.markup === "number" ? `${r.markup.toFixed(2)}%` : "â€”"}</td>
                       <td className="text-right">{fmt(r.precio)}</td>
-                      <td>{r.roundMode || "—"}</td>
+                      <td>{r.roundMode || "â€”"}</td>
                       <td className="flex gap-2">
                         <button className="btn-outline" onClick={()=>startEdit(r)}>Editar</button>
                       </td>
@@ -169,8 +169,8 @@ export default function PreciosPage(){
                 return (
                   <tr key={r.id} className="bg-amber-50">
                     <td>{r.descripcion}</td>
-                    <td>{r.codigo || "—"}</td>
-                    <td>{r.categoria || "—"}</td>
+                    <td>{r.codigo || "â€”"}</td>
+                    <td>{r.categoria || "â€”"}</td>
                     <td className="text-right"><input className="border rounded-lg p-1 w-28 text-right" value={ed.precio_base} onChange={(e)=>setEditing(prev=>({...prev, [r.id]:{...prev[r.id], precio_base:e.target.value}}))}/></td>
                     <td className="text-right"><input className="border rounded-lg p-1 w-24 text-right" value={ed.bonifChain} placeholder="20+10" onChange={(e)=>setEditing(prev=>({...prev, [r.id]:{...prev[r.id], bonifChain:e.target.value}}))}/></td>
                     <td className="text-right">{fmt(pv.costo_neto)}</td>
@@ -196,7 +196,7 @@ export default function PreciosPage(){
                   <td colSpan={10}>
                     <div className="empty">
                       <h3>Sin resultados</h3>
-                      <p>Buscá por descripción, código o categoría.</p>
+                      <p>BuscÃ¡ por descripciÃ³n, cÃ³digo o categorÃ­a.</p>
                     </div>
                   </td>
                 </tr>

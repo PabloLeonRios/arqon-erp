@@ -1,7 +1,7 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 export const ClientSchema = z.object({
-  razonSocial: z.string().min(1, "La razón social es obligatoria"),
+  razonSocial: z.string().min(1, "La razÃ³n social es obligatoria"),
   cuit: z.string().min(8).max(13).optional(),
   email: z.string().email().optional(),
   telefono: z.string().optional(),

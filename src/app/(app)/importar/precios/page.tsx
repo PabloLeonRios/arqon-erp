@@ -1,12 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
 /**
  * Reglas que pediste:
  * - Markup global (%)
- * - Bonificación libre se aplica en la venta (no acá)
- * - Redondeo a múltiplos de 10 (método: nearest/up/down)
+ * - BonificaciÃ³n libre se aplica en la venta (no acÃ¡)
+ * - Redondeo a mÃºltiplos de 10 (mÃ©todo: nearest/up/down)
  * - Permitir cargar/modificar manual antes de importar
  * - XLSX/CSV desde el navegador (sin servidor)
  */
@@ -42,7 +42,7 @@ export default function ImportarPreciosPage() {
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  // Parámetros
+  // ParÃ¡metros
   const [usarPrecioArchivo, setUsarPrecioArchivo] = useState(false);
   const [markup, setMarkup] = useState<number>(30);
   const [redondear, setRedondear] = useState(true);
@@ -63,13 +63,13 @@ export default function ImportarPreciosPage() {
       const json: RowRaw[] = XLSX.utils.sheet_to_json(ws, { defval: "" });
       setRows(json);
 
-      // detección básica de columnas
+      // detecciÃ³n bÃ¡sica de columnas
       const colNames = Object.keys(json[0] || {}).map((k) => k.toString());
       const findCol = (cands: string[]) =>
         colNames.find((c) => cands.includes(norm(c)));
 
-      const colSku   = findCol(["sku","código","codigo","código de barras","codigo de barras","barcode"]);
-      const colNombre= findCol(["nombre","descripcion","descripción","detalle","producto"]);
+      const colSku   = findCol(["sku","cÃ³digo","codigo","cÃ³digo de barras","codigo de barras","barcode"]);
+      const colNombre= findCol(["nombre","descripcion","descripciÃ³n","detalle","producto"]);
       const colCosto = findCol(["costo","coste"]);
       const colPrecio= findCol(["precio","precio venta","precio_venta","price"]);
 
@@ -97,7 +97,7 @@ export default function ImportarPreciosPage() {
   }
 
   const itemsCalculados = useMemo(() => {
-    // Calcula precio final según reglas
+    // Calcula precio final segÃºn reglas
     return items.map((it) => {
       const base = usarPrecioArchivo && isFinite(Number(it.precio))
         ? Number(it.precio)
@@ -148,9 +148,9 @@ export default function ImportarPreciosPage() {
         updated  += j.updated  || 0;
         total    += j.total    || pack.length;
       }
-      setMsg(`✅ Importación OK · Insertados: ${inserted} · Actualizados: ${updated} · Total: ${total}`);
+      setMsg(`âœ… ImportaciÃ³n OK Â· Insertados: ${inserted} Â· Actualizados: ${updated} Â· Total: ${total}`);
     } catch (e: any) {
-      setMsg(`❌ ${e.message || "Error importando"}`);
+      setMsg(`âŒ ${e.message || "Error importando"}`);
     } finally {
       setBusy(false);
     }
@@ -192,14 +192,14 @@ export default function ImportarPreciosPage() {
               <div className="flex items-center gap-2">
                 <span>Redondear</span>
                 <select value={redondear ? "si" : "no"} onChange={(e) => setRedondear(e.target.value === "si")} className="rounded-md bg-neutral-950 px-2 py-1 ring-1 ring-neutral-800">
-                  <option value="si">Sí</option>
+                  <option value="si">SÃ­</option>
                   <option value="no">No</option>
                 </select>
               </div>
               {redondear && (
                 <>
                   <div className="flex items-center gap-2">
-                    <span>Múltiplo</span>
+                    <span>MÃºltiplo</span>
                     <input
                       type="number"
                       value={multiple}
@@ -208,9 +208,9 @@ export default function ImportarPreciosPage() {
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span>Método</span>
+                    <span>MÃ©todo</span>
                     <select value={mode} onChange={(e) => setMode(e.target.value as any)} className="rounded-md bg-neutral-950 px-2 py-1 ring-1 ring-neutral-800">
-                      <option value="nearest">Al más cercano</option>
+                      <option value="nearest">Al mÃ¡s cercano</option>
                       <option value="up">Hacia arriba</option>
                       <option value="down">Hacia abajo</option>
                     </select>
@@ -243,7 +243,7 @@ export default function ImportarPreciosPage() {
         </div>
       </div>
 
-      {/* PREVIEW + EDICIÓN RÁPIDA */}
+      {/* PREVIEW + EDICIÃ“N RÃPIDA */}
       {!!items.length && (
         <div className="rounded-lg border border-neutral-800 overflow-auto">
           <table className="w-full text-sm">
@@ -255,7 +255,7 @@ export default function ImportarPreciosPage() {
                 <th className="text-right p-2">Precio</th>
                 <th className="text-right p-2">IVA %</th>
                 <th className="text-left p-2">Unidad</th>
-                <th className="text-left p-2">Categoría</th>
+                <th className="text-left p-2">CategorÃ­a</th>
                 <th className="text-right p-2">Stock</th>
                 <th className="text-left p-2">Notas</th>
               </tr>

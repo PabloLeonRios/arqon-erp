@@ -1,4 +1,4 @@
-// src/app/api/productos/route.ts
+﻿// src/app/api/productos/route.ts
 import { NextResponse } from "next/server";
 import { ProductSchema } from "@/types/product";
 import { adminDb } from "@/lib/firebaseAdmin";
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
 
     const limit = Math.min(Number(limitParam || 25), 100);
 
-    // Colección filtrada por org
+    // ColecciÃ³n filtrada por org
     let ref = adminDb
       .collection("productos")
       .where("orgId", "==", orgId)
@@ -47,10 +47,10 @@ export async function GET(req: Request) {
   } catch (err: any) {
     console.error("GET /api/productos error:", err);
     const msg =
-      err?.message === "Organización no seleccionada"
-        ? "Seleccioná una organización"
+      err?.message === "OrganizaciÃ³n no seleccionada"
+        ? "SeleccionÃ¡ una organizaciÃ³n"
         : err?.message || "Error interno";
-    const code = msg.includes("organización") ? 400 : 500;
+    const code = msg.includes("organizaciÃ³n") ? 400 : 500;
     return NextResponse.json({ ok: false, error: msg }, { status: code });
   }
 }
@@ -80,17 +80,17 @@ export async function POST(req: Request) {
     // Zod
     if (err?.issues) {
       return NextResponse.json(
-        { ok: false, error: "Datos inválidos", issues: err.issues },
+        { ok: false, error: "Datos invÃ¡lidos", issues: err.issues },
         { status: 400 }
       );
     }
 
     const msg =
-      err?.message === "Organización no seleccionada"
-        ? "Seleccioná una organización"
+      err?.message === "OrganizaciÃ³n no seleccionada"
+        ? "SeleccionÃ¡ una organizaciÃ³n"
         : err?.message || "Error interno";
 
-    const code = msg.includes("organización") ? 400 : 500;
+    const code = msg.includes("organizaciÃ³n") ? 400 : 500;
     return NextResponse.json({ ok: false, error: msg }, { status: code });
   }
 }

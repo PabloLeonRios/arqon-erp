@@ -1,4 +1,4 @@
-// src/app/api/import/listas/route.ts
+﻿// src/app/api/import/listas/route.ts
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { Timestamp } from "firebase-admin/firestore";
@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-/* Helpers de limpieza/conversión */
+/* Helpers de limpieza/conversiÃ³n */
 function s(v: any) {
   const t = (v ?? "").toString().trim();
   return t.length ? t : undefined;
@@ -19,7 +19,7 @@ function n(v: any) {
 function b(v: any) {
   if (typeof v === "boolean") return v;
   const t = (v ?? "").toString().trim().toLowerCase();
-  if (["true","1","si","sí","yes"].includes(t)) return true;
+  if (["true","1","si","sÃ­","yes"].includes(t)) return true;
   if (["false","0","no"].includes(t)) return false;
   return undefined;
 }
@@ -41,7 +41,7 @@ function roundUpToMultiple(value: number, mult?: number) {
  *   opciones: {
  *     usarPrecioArchivo: boolean,
  *     markupPct: number,         // ej: 25
- *     redondeo: number | null,   // ej: 10, 100, 5 (múltiplo superior). null/0 = sin redondeo
+ *     redondeo: number | null,   // ej: 10, 100, 5 (mÃºltiplo superior). null/0 = sin redondeo
  *     actualizarProductosBase: boolean // si codigo === "BASE", actualizar productos.precio
  *   },
  *   items: [
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 
     if (!items.length) {
       return NextResponse.json(
-        { ok: false, error: "Sin filas válidas (SKU requerido)" },
+        { ok: false, error: "Sin filas vÃ¡lidas (SKU requerido)" },
         { status: 400 }
       );
     }
@@ -149,8 +149,8 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3) Importar precios (colección plana 'precios' con id compuesto "listaId__sku")
-    //    Índice recomendado (después): precios(listaId ASC, sku ASC)
+    // 3) Importar precios (colecciÃ³n plana 'precios' con id compuesto "listaId__sku")
+    //    Ãndice recomendado (despuÃ©s): precios(listaId ASC, sku ASC)
     let inserted = 0, updated = 0, prodUpdated = 0;
 
     for (let i = 0; i < items.length; i += 450) {
@@ -167,7 +167,7 @@ export async function POST(req: Request) {
           const base = n(it.costo)! * (1 + (markupPct || 0) / 100);
           precioFinal = roundUpToMultiple(base, redondeo || 0);
         } else {
-          // sin costo ni precio → saltear fila
+          // sin costo ni precio â†’ saltear fila
           continue;
         }
 
@@ -183,11 +183,11 @@ export async function POST(req: Request) {
         });
 
         // Para saber si es insert/update sin leer (aproximado):
-        // Escribimos con set merge y luego contamos por existencia previa rápidamente:
+        // Escribimos con set merge y luego contamos por existencia previa rÃ¡pidamente:
         // En batch no se puede saber; hacemos un truco: precarga opcional (pero costoso).
-        // Optamos por "asumir" update si ya habíamos visto ese documento en este run,
+        // Optamos por "asumir" update si ya habÃ­amos visto ese documento en este run,
         // pero como es primera vez, contamos todo como 'updated or inserted'.
-        // Para métricas correctas haríamos un fast read previo; acá simplificamos:
+        // Para mÃ©tricas correctas harÃ­amos un fast read previo; acÃ¡ simplificamos:
         batch.set(ref, toWrite, { merge: true });
 
         // Actualizar producto.precio si es BASE y existe el producto
@@ -204,7 +204,7 @@ export async function POST(req: Request) {
       await batch.commit();
     }
 
-    // Para dar métricas reales de inserted/updated necesitaríamos leer antes cada priceDoc,
+    // Para dar mÃ©tricas reales de inserted/updated necesitarÃ­amos leer antes cada priceDoc,
     // pero para no encarecer, devolvemos total y destacamos prodUpdated si aplica.
     const total = items.length;
 
@@ -214,7 +214,7 @@ export async function POST(req: Request) {
         listaId,
         codigo,
         total,
-        // métricas aproximadas (si querés exactas, hacemos fast-read previo en otra iteración):
+        // mÃ©tricas aproximadas (si querÃ©s exactas, hacemos fast-read previo en otra iteraciÃ³n):
         inserted,
         updated,
         prodUpdated: wantUpdateProductos ? prodUpdated : 0,

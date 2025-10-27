@@ -1,4 +1,4 @@
-// middleware.ts
+﻿// middleware.ts
 import { NextResponse, type NextRequest } from "next/server";
 import { ORG_COOKIE_ID, ORG_COOKIE_NAME } from "@/lib/tenancy";
 
@@ -16,7 +16,7 @@ export function middleware(req: NextRequest) {
   return res;
 }
 
-// Aplica a todo menos estáticos
+// Aplica a todo menos estÃ¡ticos
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|images|slides|logo|public).*)",

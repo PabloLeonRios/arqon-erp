@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { db } from "@/lib/firebase";
@@ -20,7 +20,7 @@ type Prod = {
 };
 
 function fmt(n?: number|null){
-  if (n === null || n === undefined || !isFinite(Number(n))) return "—";
+  if (n === null || n === undefined || !isFinite(Number(n))) return "â€”";
   return `$${Number(n).toFixed(2)}`;
 }
 
@@ -50,7 +50,7 @@ export default function ProductosPage(){
     <main>
       <PageHeader
         title="Productos"
-        subtitle="Precio fuente → bonif → costo neto → markup → redondeo"
+        subtitle="Precio fuente â†’ bonif â†’ costo neto â†’ markup â†’ redondeo"
         actions={<a href="/importar/precios" className="btn-outline">+ Importar precios</a>}
       />
 
@@ -58,7 +58,7 @@ export default function ProductosPage(){
         <div className="card p-4 mb-4">
           <input
             className="border rounded-lg p-2 w-full"
-            placeholder="Buscar por descripción, código o categoría…"
+            placeholder="Buscar por descripciÃ³n, cÃ³digo o categorÃ­aâ€¦"
             value={qtext}
             onChange={(e)=>setQtext(e.target.value)}
           />
@@ -68,9 +68,9 @@ export default function ProductosPage(){
           <table className="table table-striped table-hover">
             <thead>
               <tr>
-                <th>Descripción</th>
-                <th>Código</th>
-                <th>Categoría</th>
+                <th>DescripciÃ³n</th>
+                <th>CÃ³digo</th>
+                <th>CategorÃ­a</th>
                 <th className="text-right">Precio fuente</th>
                 <th className="text-right">Bonif</th>
                 <th className="text-right">Costo neto</th>
@@ -84,15 +84,15 @@ export default function ProductosPage(){
               {filtered.map(p=>(
                 <tr key={p.id}>
                   <td>{p.descripcion}</td>
-                  <td>{p.codigo || "—"}</td>
-                  <td>{p.categoria || "—"}</td>
+                  <td>{p.codigo || "â€”"}</td>
+                  <td>{p.categoria || "â€”"}</td>
                   <td className="text-right">{fmt(p.precio_base)}</td>
-                  <td className="text-right">{(p.bonifs && p.bonifs.length) ? p.bonifs.join("+")+"%" : "—"}</td>
+                  <td className="text-right">{(p.bonifs && p.bonifs.length) ? p.bonifs.join("+")+"%" : "â€”"}</td>
                   <td className="text-right">{fmt(p.costo_neto)}</td>
-                  <td className="text-right">{typeof p.markup === "number" ? `${p.markup.toFixed(2)}%` : "—"}</td>
+                  <td className="text-right">{typeof p.markup === "number" ? `${p.markup.toFixed(2)}%` : "â€”"}</td>
                   <td className="text-right">{fmt(p.precio)}</td>
-                  <td>{p.roundMode || "—"}</td>
-                  <td>{p.listaNombre || "—"}</td>
+                  <td>{p.roundMode || "â€”"}</td>
+                  <td>{p.listaNombre || "â€”"}</td>
                 </tr>
               ))}
               {filtered.length===0 && (
@@ -100,7 +100,7 @@ export default function ProductosPage(){
                   <td colSpan={10}>
                     <div className="empty">
                       <h3>Sin productos</h3>
-                      <p>Importá una lista para ver resultados.</p>
+                      <p>ImportÃ¡ una lista para ver resultados.</p>
                     </div>
                   </td>
                 </tr>
