@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0E0E0E;
+  --fg: #EAEAEA;
+  --muted: #A0A0A0;
+  --brand: #00A878;
+}
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); }
+.container { @apply max-w-5xl mx-auto px-6; }
